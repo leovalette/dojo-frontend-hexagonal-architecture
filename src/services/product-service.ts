@@ -5,11 +5,26 @@ export type Product = {
   name: string;
   price: number;
 };
-export const addProduct = (product: Product): Promise<Product[]> =>
-  Promise.resolve([]);
+
+export type Cart = {
+  id: string;
+  products: Product[];
+};
+
+export const createCart = (): Promise<Cart> =>
+  Promise.resolve({ id: 'cart', products: [] });
+
+export const addProductToCart = (product: Product, cart: Cart): Promise<Cart> =>
+  Promise.resolve({ id: 'cart', products: [...cart.products, product] });
 
 export const getProducts = (): Promise<Product[]> =>
   Promise.resolve(productList);
 
-  export const removeProduct = (product: Product): Promise<Product[]> =>
-  Promise.resolve([]);
+export const removeProductFromCart = (
+  product: Product,
+  cart: Cart
+): Promise<Cart> =>
+  Promise.resolve({
+    id: 'cart',
+    products: cart.products.filter(({ id }) => product.id !== id),
+  });

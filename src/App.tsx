@@ -1,37 +1,54 @@
-import { FC, useCallback, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Cart } from './components/Cart';
 import { Products } from './components/Products';
-import { addProduct, Product, removeProduct } from './services/product-service';
+import {
+  addProductToCart,
+  Cart as CartType,
+  createCart,
+  Product,
+  removeProductFromCart,
+} from './services/product-service';
 
 export const App: FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [cart, setCart] = useState<CartType>();
+
+  useEffect(() => {
+    createCart().then(setCart);
+  }, []);
 
   const totalPrice = useMemo<Product['price']>(
     () =>
-      Number(products.reduce((acc, curr) => acc + curr.price, 0).toFixed(2)),
-    [products]
+      cart
+        ? Number(
+            cart.products.reduce((acc, curr) => acc + curr.price, 0).toFixed(2)
+          )
+        : 0,
+    [cart]
   );
 
   const onProductClick = useCallback(
     (product: Product) => {
+      if (!cart) {
+        return;
+      }
       if (totalPrice + product.price > 1500) {
         return;
       }
-      if (products.includes(product)) {
+      if (cart.products.includes(product)) {
         return;
       }
-      setProducts([...products, product]);
-      addProduct(product);
+      addProductToCart(product, cart).then(setCart);
     },
-    [products, totalPrice]
+    [totalPrice, cart]
   );
 
   const onRemoveProductClick = useCallback(
     (product: Product) => {
-      setProducts(products.filter(({ id }) => product.id !== id));
-      removeProduct(product);
+      if (cart) {
+        removeProductFromCart(product, cart).then(setCart);
+      }
     },
-    [products]
+    [cart]
   );
 
   return (
@@ -44,10 +61,9 @@ export const App: FC = () => {
         </div>
         <div className='flex flex-1 flex-col items-center bg-blue-100 rounded p-4'>
           <h2 className='mb-6 text-2xl font-bold'>Your cart</h2>
-          <Cart
-            products={products}
-            onRemoveProductClick={onRemoveProductClick}
-          />
+          {cart && (
+            <Cart cart={cart} onRemoveProductClick={onRemoveProductClick} />
+          )}
           <div className='text-xl text-red-500'>Price : {totalPrice}€</div>
         </div>
       </div>

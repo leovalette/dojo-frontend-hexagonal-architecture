@@ -1,14 +1,14 @@
 import { FC } from 'react';
-import { Product } from '../services/product-service';
+import { Product, Cart as CartType } from '../services/product-service';
 
 type CartProps = {
-  products: Product[];
+  cart: CartType;
   onRemoveProductClick: (product: Product) => void;
 };
-export const Cart: FC<CartProps> = ({ products, onRemoveProductClick }) => {
+export const Cart: FC<CartProps> = ({ cart, onRemoveProductClick }) => {
   return (
     <div className='flex flex-wrap gap-2 justify-center'>
-      {products.map((product) => (
+      {cart.products.map((product) => (
         <div
           key={product.id}
           className='rounded bg-purple-400 w-32 h-32 p-2 flex flex-col items-center justify-between text-center'
