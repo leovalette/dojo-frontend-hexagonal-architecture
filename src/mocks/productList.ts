@@ -1,7 +1,6 @@
-import { Product } from '../services/product-service';
+import { ProductDTO } from '../data/models/productDTO';
 
-
-export const productList: Product[] = [
+export const productList: ProductDTO[] = [
   {
     id: '1',
     name: 'Pants',

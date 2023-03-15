@@ -1,51 +1,36 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { cartDomainAdapter } from './adapters/cart-adapter';
 import { Cart } from './components/Cart';
 import { Products } from './components/Products';
-import {
-  addProductToCart,
-  Cart as CartType,
-  createCart,
-  Product,
-  removeProductFromCart,
-} from './services/product-service';
+import { CartUI } from './models/cartUI';
+import { ProductUI } from './models/productUI';
 
 export const App: FC = () => {
-  const [cart, setCart] = useState<CartType>();
+  const [cart, setCart] = useState<CartUI>();
 
   useEffect(() => {
-    createCart().then(setCart);
+    cartDomainAdapter.createCart().then(setCart);
   }, []);
 
-  const totalPrice = useMemo<Product['price']>(
-    () =>
-      cart
-        ? Number(
-            cart.products.reduce((acc, curr) => acc + curr.price, 0).toFixed(2)
-          )
-        : 0,
+  const totalPrice = useMemo<ProductUI['price']>(
+    () => (cart ? cartDomainAdapter.getTotalPrice(cart) : 0),
     [cart]
   );
 
   const onProductClick = useCallback(
-    (product: Product) => {
+    (product: ProductUI) => {
       if (!cart) {
         return;
       }
-      if (totalPrice + product.price > 1500) {
-        return;
-      }
-      if (cart.products.includes(product)) {
-        return;
-      }
-      addProductToCart(product, cart).then(setCart);
+      cartDomainAdapter.addProductToCart(cart, product).then(setCart);
     },
     [totalPrice, cart]
   );
 
   const onRemoveProductClick = useCallback(
-    (product: Product) => {
+    (product: ProductUI) => {
       if (cart) {
-        removeProductFromCart(product, cart).then(setCart);
+        cartDomainAdapter.removeProductFromCart(cart, product).then(setCart);
       }
     },
     [cart]
