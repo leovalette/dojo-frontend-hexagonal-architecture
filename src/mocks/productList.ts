@@ -1,6 +1,6 @@
-import { ProductDTO } from '../data/models/productDTO';
+import { ProductOldDTO } from '../data/models/productDTO';
 
-export const productList: ProductDTO[] = [
+export const productList: ProductOldDTO[] = [
   {
     id: '1',
     name: 'Pants',
