@@ -1,9 +1,9 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { cartDomainAdapter } from './adapters/cart-adapter';
-import { Cart } from './components/Cart';
-import { Products } from './components/Products';
-import { CartUI } from './models/cartUI';
-import { ProductUI } from './models/productUI';
+import { cartDomainAdapter } from '../../adapters/cart-adapter';
+import { Cart } from './Cart';
+import { Products } from './Products';
+import { CartUI } from '../../models/cartUI';
+import { ProductUI } from '../../models/productUI';
 
 export const App: FC = () => {
   const [cart, setCart] = useState<CartUI>();
@@ -29,9 +29,10 @@ export const App: FC = () => {
 
   const onRemoveProductClick = useCallback(
     (product: ProductUI) => {
-      if (cart) {
-        cartDomainAdapter.removeProductFromCart(cart, product).then(setCart);
+      if (!cart) {
+        return;
       }
+      cartDomainAdapter.removeProductFromCart(cart, product).then(setCart);
     },
     [cart]
   );

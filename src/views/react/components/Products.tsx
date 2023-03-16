@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { FC } from 'react';
-import { productDomainAdapter } from '../adapters/product-adapter';
-import { ProductUI } from '../models/productUI';
+import { productDomainAdapter } from '../../adapters/product-adapter';
+import { ProductUI } from '../../models/productUI';
 
 type ProductsProps = { onProductClick: (product: ProductUI) => void };
-export const Products: FC<ProductsProps> = ({ onProductClick }) => {
+export const Products = ({ onProductClick }: ProductsProps) => {
   const { data: products } = useQuery({
     queryKey: ['products'],
     queryFn: productDomainAdapter.getProducts,

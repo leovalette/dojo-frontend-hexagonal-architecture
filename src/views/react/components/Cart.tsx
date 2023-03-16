@@ -1,12 +1,11 @@
-import { FC } from 'react';
-import { CartUI } from '../models/cartUI';
-import { ProductUI } from '../models/productUI';
+import { CartUI } from '../../models/cartUI';
+import { ProductUI } from '../../models/productUI';
 
 type CartProps = {
   cart: CartUI;
   onRemoveProductClick: (product: ProductUI) => void;
 };
-export const Cart: FC<CartProps> = ({ cart, onRemoveProductClick }) => {
+export const Cart = ({ cart, onRemoveProductClick }: CartProps) => {
   return (
     <div className='flex flex-wrap gap-2 justify-center'>
       {cart.products.map((product) => (
